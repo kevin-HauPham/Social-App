@@ -18,10 +18,8 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostReaction from "./PostReaction";
 import CommentForm from "../comment/CommentForm";
 import CommentList from "../comment/CommentList";
-import useAuth from "../../hooks/useAuth";
-import { useDispatch, useSelector } from "react-redux";
 
-function PostCard({ post, handleDelete }) {
+function PostCard({ post, handleDelete, handleEdit }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -52,6 +50,7 @@ function PostCard({ post, handleDelete }) {
         onClose={handleClose}
       >
         <MenuItem onClick={() => handleDelete()}>Delete</MenuItem>
+        <MenuItem onClick={() => handleEdit()}>edit</MenuItem>
       </Menu>
     </>
   );

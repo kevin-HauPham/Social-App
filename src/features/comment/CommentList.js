@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 
 import { Pagination, Stack, Typography } from "@mui/material";
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
-import { getComments } from "./commentSlice";
+import { deleteComment, getComments } from "./commentSlice";
 import CommentCard from "./CommentCard";
 import LoadingScreen from "../../components/LoadingScreen";
 import { COMMENTS_PER_POST } from "../../app/config";
+import useAuth from "../../hooks/useAuth";
 
 function CommentList({ postId }) {
   const {
@@ -31,17 +32,48 @@ function CommentList({ postId }) {
     if (postId) dispatch(getComments({ postId }));
   }, [postId, dispatch]);
 
+  const { user } = useAuth();
+  const handleDeleteComment = (commentId, commentAuthorID, postId) => {
+    console.log("comment_id:", commentId);
+    console.log("userid:", user._id);
+    console.log("commentAuthorID:", commentAuthorID);
+    console.log("post_id;", postId);
+    if (user._id === commentAuthorID) {
+      dispatch(deleteComment({ commentId, postId }));
+    }
+  };
+
   let renderComments;
 
   if (commentsByPost) {
-    const comments = commentsByPost.map((commentId) => commentsById[commentId]);
-    renderComments = (
-      <Stack spacing={1.5}>
-        {comments.map((comment) => (
-          <CommentCard key={comment._id} comment={comment} />
-        ))}
-      </Stack>
-    );
+    if (commentsByPost) {
+      const comments = commentsByPost.map(
+        (commentId) => commentsById[commentId]
+      );
+      console.log("comments", comments);
+      renderComments = (
+        <Stack spacing={1.5}>
+          {comments.map((comment) => {
+            console.log("vvvv", comment);
+            return (
+              <CommentCard
+                key={comment._id}
+                comment={comment}
+                handleDeleteComment={() => {
+                  handleDeleteComment(
+                    comment._id,
+                    comment.author._id,
+                    comment.post
+                  );
+                }}
+              />
+            );
+          })}
+        </Stack>
+      );
+    } else {
+      <button>lll</button>;
+    }
   } else if (isLoading) {
     renderComments = <LoadingScreen />;
   }

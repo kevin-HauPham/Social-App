@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import PostCard from "./PostCard";
-import { getPosts } from "./postSlice";
+import { editPost, getPosts } from "./postSlice";
 import useAuth from "../../hooks/useAuth";
 import { deletePost } from "./postSlice";
 
@@ -21,9 +21,14 @@ function PostList({ userId }) {
   }, [dispatch, userId, page]);
 
   const handleDelete = (post_id, post_athor_id) => {
-    console.log("post_id", post_id);
     if (user._id === post_athor_id) {
       dispatch(deletePost(post_id));
+    }
+  };
+  const handleEdit = (post_id, post_athor_id, content, image) => {
+    console.log("post_id", post_id);
+    if (user._id === post_athor_id) {
+      dispatch(editPost(post_id, { content: "llll", image: "" }));
     }
   };
 
@@ -35,6 +40,9 @@ function PostList({ userId }) {
           post={post}
           handleDelete={() => {
             handleDelete(post._id, post.author._id);
+          }}
+          handleEdit={() => {
+            handleEdit(post._id, post.author._id, post.content, post.image);
           }}
         />
       ))}

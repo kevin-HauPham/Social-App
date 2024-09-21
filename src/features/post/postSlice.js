@@ -71,6 +71,13 @@ const slice = createSlice({
         state.currentPagePosts.pop();
       }
     },
+    editPostSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+
+      const updatedPost = action.payload; // The updated post data from server response
+      state.postsById[updatedPost._id] = updatedPost; // Update the post in postsById
+    },
 
     sendPostReactionSuccess(state, action) {
       state.isLoading = false;
@@ -126,25 +133,33 @@ export const deletePost = (post_id) => async (dispatch) => {
     const response = await apiService.delete(`/posts/${post_id}`);
     dispatch(slice.actions.deletePostSuccess({ ...response.data, post_id }));
     toast.success("post deleted");
+    dispatch(getCurrentUserProfile());
   } catch (error) {
     dispatch(slice.actions.hasError(error.message));
     toast.error(error.message);
   }
 };
 
-// export const deletePost =
-//   ({ postId }) =>
-//   async (dispatch) => {
-//     dispatch(slice.actions.startLoading());
-//     try {
-//       const response = await apiService.delete(`/posts/${postId}`);
-//       dispatch(slice.actions.deletePostSuccess(response.data));
-//       toast.success("Post successfully");
-//     } catch (error) {
-//       dispatch(slice.actions.hasError(error.message));
-//       toast.error(error.message);
-//     }
-//   };
+export const editPost = (post_id, content, image) => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    // Optionally, upload a new image to cloudinary if needed
+    const imageUrl = image ? await cloudinaryUpload(image) : null;
+
+    // Make the API call. Pass updated data (content and/or image)
+    const response = await apiService.put(`/posts/${post_id}`, {
+      content,
+      image: imageUrl,
+    });
+
+    // Dispatch the success action with the updated post data
+    dispatch(slice.actions.editPostSuccess(response.data));
+    toast.success("Post edited successfully");
+  } catch (error) {
+    dispatch(slice.actions.hasError(error.message));
+    toast.error(error.message);
+  }
+};
 
 export const sendPostReaction =
   ({ postId, emoji }) =>
