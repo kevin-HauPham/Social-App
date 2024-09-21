@@ -33,7 +33,6 @@ const slice = createSlice({
     getPostsSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
-
       const { posts, count } = action.payload;
       posts.forEach((post) => {
         state.postsById[post._id] = post;
@@ -46,11 +45,31 @@ const slice = createSlice({
     createPostSuccess(state, action) {
       state.isLoading = false;
       state.error = null;
+
       const newPost = action.payload;
       if (state.currentPagePosts.length % POSTS_PER_PAGE === 0)
         state.currentPagePosts.pop();
       state.postsById[newPost._id] = newPost;
       state.currentPagePosts.unshift(newPost._id);
+    },
+
+    deletePostSuccess(state, action) {
+      state.isLoading = false;
+      state.error = null;
+
+      const { post_id } = action.payload; // Assuming action.payload contains post_id to delete
+      delete state.postsById[post_id]; // Remove post from postsById
+
+      // Optionally, remove the post ID from currentPagePosts if needed
+      const index = state.currentPagePosts.indexOf(post_id);
+      if (index > -1) {
+        state.currentPagePosts.splice(index, 1); // Remove post_id from currentPagePosts
+      }
+
+      // Optional: If you want to pop the last post when reaching the limit
+      if (state.currentPagePosts.length % POSTS_PER_PAGE === 0) {
+        state.currentPagePosts.pop();
+      }
     },
 
     sendPostReactionSuccess(state, action) {
@@ -100,6 +119,32 @@ export const createPost =
       toast.error(error.message);
     }
   };
+
+export const deletePost = (post_id) => async (dispatch) => {
+  dispatch(slice.actions.startLoading());
+  try {
+    const response = await apiService.delete(`/posts/${post_id}`);
+    dispatch(slice.actions.deletePostSuccess({ ...response.data, post_id }));
+    toast.success("post deleted");
+  } catch (error) {
+    dispatch(slice.actions.hasError(error.message));
+    toast.error(error.message);
+  }
+};
+
+// export const deletePost =
+//   ({ postId }) =>
+//   async (dispatch) => {
+//     dispatch(slice.actions.startLoading());
+//     try {
+//       const response = await apiService.delete(`/posts/${postId}`);
+//       dispatch(slice.actions.deletePostSuccess(response.data));
+//       toast.success("Post successfully");
+//     } catch (error) {
+//       dispatch(slice.actions.hasError(error.message));
+//       toast.error(error.message);
+//     }
+//   };
 
 export const sendPostReaction =
   ({ postId, emoji }) =>

@@ -22,6 +22,7 @@ function CommentForm({ postId }) {
     <form onSubmit={handleSubmit}>
       <Stack direction="row" alignItems="center">
         <Avatar src={user.avatarUrl} alt={user.name} />
+        
         <TextField
           fullWidth
           size="small"

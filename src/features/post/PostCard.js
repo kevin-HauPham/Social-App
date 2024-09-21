@@ -8,6 +8,8 @@ import {
   Typography,
   CardHeader,
   IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import { Link as RouterLink } from "react-router-dom";
 import { fDate } from "../../utils/formatTime";
@@ -16,8 +18,43 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import PostReaction from "./PostReaction";
 import CommentForm from "../comment/CommentForm";
 import CommentList from "../comment/CommentList";
+import useAuth from "../../hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
 
-function PostCard({ post }) {
+function PostCard({ post, handleDelete }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const renderMenu = (
+    <>
+      <IconButton
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <MoreVertIcon sx={{ fontSize: 30 }} />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+      >
+        <MenuItem onClick={() => handleDelete()}>Delete</MenuItem>
+      </Menu>
+    </>
+  );
   return (
     <Card>
       <CardHeader
@@ -44,11 +81,7 @@ function PostCard({ post }) {
             {fDate(post.createdAt)}
           </Typography>
         }
-        action={
-          <IconButton>
-            <MoreVertIcon sx={{ fontSize: 30 }} />
-          </IconButton>
-        }
+        action={renderMenu}
       />
 
       <Stack spacing={2} sx={{ p: 3 }}>

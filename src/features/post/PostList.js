@@ -4,9 +4,12 @@ import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import PostCard from "./PostCard";
 import { getPosts } from "./postSlice";
+import useAuth from "../../hooks/useAuth";
+import { deletePost } from "./postSlice";
 
 function PostList({ userId }) {
   const [page, setPage] = useState(1);
+  const { user } = useAuth();
   const { currentPagePosts, postsById, isLoading, totalPosts } = useSelector(
     (state) => state.post
   );
@@ -17,10 +20,23 @@ function PostList({ userId }) {
     if (userId) dispatch(getPosts({ userId, page }));
   }, [dispatch, userId, page]);
 
+  const handleDelete = (post_id, post_athor_id) => {
+    console.log("post_id", post_id);
+    if (user._id === post_athor_id) {
+      dispatch(deletePost(post_id));
+    }
+  };
+
   return (
     <>
       {posts.map((post) => (
-        <PostCard key={post._id} post={post} />
+        <PostCard
+          key={post._id}
+          post={post}
+          handleDelete={() => {
+            handleDelete(post._id, post.author._id);
+          }}
+        />
       ))}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {totalPosts ? (
