@@ -21,30 +21,35 @@ function PostList({ userId }) {
   }, [dispatch, userId, page]);
 
   const handleDelete = (post_id, post_athor_id) => {
-    if (user._id === post_athor_id) {
-      dispatch(deletePost(post_id));
+    if (window.confirm("Delete the item?")) {
+      if (user._id === post_athor_id) {
+        dispatch(deletePost(post_id));
+      }
     }
   };
-  const handleEdit = (post_id, post_athor_id, content, image) => {
-    console.log("post_id", post_id);
+  const handleEdit = (post_id, post_athor_id) => {
+    const content = "edited";
+    const image = "";
     if (user._id === post_athor_id) {
-      dispatch(editPost(post_id, { content: "llll", image: "" }));
+      dispatch(editPost(post_id, content, image));
     }
   };
 
   return (
     <>
       {posts.map((post) => (
-        <PostCard
-          key={post._id}
-          post={post}
-          handleDelete={() => {
-            handleDelete(post._id, post.author._id);
-          }}
-          handleEdit={() => {
-            handleEdit(post._id, post.author._id, post.content, post.image);
-          }}
-        />
+        <>
+          <PostCard
+            key={post._id}
+            post={post}
+            handleDelete={() => {
+              handleDelete(post._id, post.author._id);
+            }}
+            handleEdit={() => {
+              handleEdit(post._id, post.author._id);
+            }}
+          />
+        </>
       ))}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         {totalPosts ? (

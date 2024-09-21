@@ -25,6 +25,7 @@ function PostForm() {
     resolver: yupResolver(yupSchema),
     defaultValues,
   });
+
   const {
     handleSubmit,
     reset,

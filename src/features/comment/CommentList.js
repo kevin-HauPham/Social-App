@@ -34,12 +34,10 @@ function CommentList({ postId }) {
 
   const { user } = useAuth();
   const handleDeleteComment = (commentId, commentAuthorID, postId) => {
-    console.log("comment_id:", commentId);
-    console.log("userid:", user._id);
-    console.log("commentAuthorID:", commentAuthorID);
-    console.log("post_id;", postId);
-    if (user._id === commentAuthorID) {
-      dispatch(deleteComment({ commentId, postId }));
+    if (window.confirm("Delete commnent?")) {
+      if (user._id === commentAuthorID) {
+        dispatch(deleteComment({ commentId, postId }));
+      }
     }
   };
 

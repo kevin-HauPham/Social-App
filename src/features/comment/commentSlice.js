@@ -113,7 +113,7 @@ export const createComment =
         postId,
       });
       dispatch(slice.actions.createCommentSuccess(response.data));
-      //dispatch(getComments({ postId }));
+      dispatch(getComments({ postId }));
       toast.success("Create comment Success");
     } catch (error) {
       dispatch(slice.actions.hasError(error.message));
