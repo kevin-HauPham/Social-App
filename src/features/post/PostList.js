@@ -24,7 +24,7 @@ function PostList({ userId }) {
   }, [dispatch, userId, page]);
 
   const handleDelete = (post_id, post_athor_id) => {
-    if (window.confirm("Delete the item?")) {
+    if (window.confirm("Delete the Post?")) {
       if (user._id === post_athor_id) {
         dispatch(deletePost(post_id));
       }

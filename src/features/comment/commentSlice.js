@@ -51,8 +51,6 @@ const slice = createSlice({
       state.isLoading = false;
       state.error = null;
       const { commentId, postId } = action.payload;
-      console.log("postId", postId);
-      console.log("action.payload delete:", action.payload);
       // Remove the comment from commentsByPost
       if (state.commentsByPost[postId]) {
         state.commentsByPost[postId] = state.commentsByPost[postId].filter(

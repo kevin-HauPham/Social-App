@@ -51,7 +51,6 @@ function CommentList({ postId }) {
       renderComments = (
         <Stack spacing={1.5}>
           {comments.map((comment) => {
-            console.log("vvvv", comment);
             return (
               <CommentCard
                 key={comment._id}
