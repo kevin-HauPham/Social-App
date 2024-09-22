@@ -3,12 +3,13 @@ import { Box, Button, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { editPost } from "./postSlice";
 import { toast } from "react-toastify";
+import useAuth from "../../hooks/useAuth";
 
 function EditPostForm({ post, onClose }) {
   const [content, setContent] = useState(post.content);
   const [image, setImage] = useState(null); // To store the new image
   const dispatch = useDispatch();
-
+  const { user } = useAuth();
   // Handle image upload
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
@@ -18,14 +19,16 @@ function EditPostForm({ post, onClose }) {
 
   // Handle form submission to edit the post
   const handleSubmit = (e) => {
-    e.preventDefault();
-    const data = {
-      content,
-      image,
-    };
+    if (user._id === post.author._id) {
+      e.preventDefault();
+      const data = {
+        content,
+        image,
+      };
 
-    // Dispatch the action to update the post
-    dispatch(editPost(post._id, content, image));
+      // Dispatch the action to update the post
+      dispatch(editPost(post._id, content, image));
+    }
     onClose(); // Close the modal after submission
   };
 

@@ -18,7 +18,6 @@ function PostList({ userId }) {
     (state) => state.post
   );
   const posts = currentPagePosts.map((postId) => postsById[postId]);
-  console.log("posts:", posts);
   const dispatch = useDispatch();
 
   useEffect(() => {
