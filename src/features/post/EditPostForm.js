@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, Button, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { editPost } from "./postSlice";
-import { toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 
 function EditPostForm({ post, onClose }) {
@@ -21,11 +20,6 @@ function EditPostForm({ post, onClose }) {
   const handleSubmit = (e) => {
     if (user._id === post.author._id) {
       e.preventDefault();
-      const data = {
-        content,
-        image,
-      };
-
       // Dispatch the action to update the post
       dispatch(editPost(post._id, content, image));
     }

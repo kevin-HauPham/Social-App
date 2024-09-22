@@ -48,7 +48,6 @@ function CommentList({ postId }) {
       const comments = commentsByPost.map(
         (commentId) => commentsById[commentId]
       );
-      console.log("comments", comments);
       renderComments = (
         <Stack spacing={1.5}>
           {comments.map((comment) => {

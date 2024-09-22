@@ -3,10 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Box, Dialog, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import PostCard from "./PostCard";
-import { editPost, getPosts } from "./postSlice";
+import { getPosts } from "./postSlice";
 import useAuth from "../../hooks/useAuth";
 import { deletePost } from "./postSlice";
-import { FormProvider, useForm } from "react-hook-form";
 import EditPostForm from "./EditPostForm";
 
 function PostList({ userId }) {
@@ -31,10 +30,6 @@ function PostList({ userId }) {
       }
     }
   };
-  const defaultValues = {
-    content: "",
-    image: null,
-  };
 
   // Open the edit modal for the clicked post
   const handleEdit = (post) => {
@@ -50,16 +45,14 @@ function PostList({ userId }) {
   return (
     <>
       {posts.map((post) => (
-        <>
-          <PostCard
-            key={post.id}
-            post={post}
-            handleDelete={() => {
-              handleDelete(post._id, post.author._id);
-            }}
-            handleEdit={() => handleEdit(post)}
-          />
-        </>
+        <PostCard
+          key={post._id}
+          post={post}
+          handleDelete={() => {
+            handleDelete(post._id, post.author._id);
+          }}
+          handleEdit={() => handleEdit(post)}
+        />
       ))}
       <Dialog open={isEditModalOpen} onClose={handleCloseEditModal}>
         {postToEdit && (
