@@ -26,3 +26,6 @@ yarn-error.log*
 app.yaml
 .gcloudignore
 
+
+# Local Netlify folder
+.netlify
